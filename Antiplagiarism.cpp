@@ -5,6 +5,7 @@ using namespace std;
 
 int calculateCountOfWords(string str);
 int strLen(char str[]);
+int strCmp(char destStr[], char srcStr[]);
 
 bool isSeparator(char ch);
 
@@ -17,7 +18,7 @@ const int N = 128;
 int main()
 {
     string str = "AW 2 3242 fdf, fdf";
-    string strCmp = "AW 2 3242 fdf, fdg";
+    string strCmp = "AW 2 3242 fdf, fdf";
 
     double b = antiPlagiarism(str, str);
 
@@ -59,6 +60,22 @@ int main()
 // >> 2 массива строк.
 
 // AW 2;
+
+// по фрагмент
+// int countCoincidence(text, fragment);
+// int i = 0 ;
+// int j = 0;
+// int counterOfCoincidence = 0;
+// while (str[i+2] != '0')
+// str hash = md5.digetsString(str[i]) + md5.digetsString(str[i+1]) + md5.digetsString(str[i+2]);
+//{ по текст
+// while (str[j+2] != '0')
+// str hashCmp = md5.digetsString(strCmp[j]) + md5.digetsString(strCmp[j+1]) + md5.digetsString(strCmp[j+2]);
+//   }
+// j = 0 ;
+// if (hash == hashCmp){counterOfCoincidence++;}
+//}
+// return counterOfCoincidence;
 double antiPlagiarism(string text, string fragment)
 {
     int arrSizeOfText = calculateCountOfWords(text);
@@ -133,4 +150,26 @@ int strLen(char str[])
         ch = str[++i];
     }
     return i;
+}
+
+int strCmp(char destStr[], char srcStr[])
+{
+    int i = 0, flag = 0;
+    while (flag == 0)
+    {
+        if (destStr[i] > srcStr[i])
+        {
+            flag = 1;
+        }
+        else if (destStr[i] < srcStr[i])
+        {
+            flag = -1;
+        }
+        else
+        {
+            i++;
+        }
+    }
+
+    return flag;
 }

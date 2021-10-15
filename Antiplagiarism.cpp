@@ -14,6 +14,7 @@ bool isConjuction(string word);
 double antiPlagiarism(string text, string fragment);
 
 void putWordsInArray(string text, string strArray[]);
+string toLowerCase(string str);
 
 int const N = 128;
 int const QUANTITY_OF_CONJUNCTIONS = 15;
@@ -23,7 +24,7 @@ string const WORD_CONJUNCTIONS[QUANTITY_OF_CONJUNCTIONS] = {"and", "as", "or", "
 int main()
 {
     string str = "black year and, man wolf";
-    string strCmp = "black year as, man wolf2";
+    string strCmp = "Black Year as, man wolf2";
 
     cout << antiPlagiarism(strCmp, str);
 
@@ -123,7 +124,7 @@ void putWordsInArray(string text, string strArray[])
             {
                 word[iw] = '\0';
                 if (!isConjuction(word))
-                    strArray[wCounter++] = word;
+                    strArray[wCounter++] = toLowerCase(word);
                 //cout << word << endl;
                 iw = 0;
             }
@@ -173,4 +174,19 @@ bool isConjuction(string word)
             return true;
     }
     return false;
+}
+
+string toLowerCase(string str)
+{
+    int i = 0;
+
+    while (str[i] != 0)
+    {
+        if (str[i] >= 'A' && str[i] <= 'Z')
+        {
+            str[i] += 32;
+        }
+        i++;
+    }
+    return str;
 }

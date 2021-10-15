@@ -1,5 +1,5 @@
 #include <iostream>
-#include "md5.h"
+#include "md5.cpp"
 
 using namespace std;
 
@@ -14,58 +14,22 @@ double antiPlagiarism(string text, string fragment);
 
 void putWordsInArray(string text, string strArray[]);
 
-const int N = 128;
+int const N = 128;
+
+string const WORD_CONJUNCTIONS[] = {"and", "as", "or", "then", "but", "if", "till", "how", "so", "because", "unless", "until", "although", "however", "whenever"};
 
 int main()
 {
     string str = "AW 2 3242 fdf, fdf";
-    string strCmp = "AW 2 3242 fdf, fdf";
+    string strCmp = "AW 2 3242 fdf,s fdf";
 
-    double b = antiPlagiarism(str, str);
+    cout << antiPlagiarism(strCmp, str);
 
     return 0;
 }
 
-// определить количество слов в тексте - метод , он же и будет считать количество выборок ++
-// string word[words] = {text...}; Создаём массив
-// int main(int argc, const char **argv)
-// {
-//     char text[N];
-//     char word[N];
-//     int i = 0;
-//     int iw = 0;
-//     // int wCounter = 0;
-
-//     cout << "input text" << endl;
-//     cin.getline(text, N);
-//     // AW H
-//     // i = 3 iw = 3
-
-//     for (i = 0; text[i] != '\0'; i++)
-//     {
-//         if (!isSeparator(text[i])){
-// 			word[iw] = text[i];
-// 			iw++;
-// 			if (isSeparator(text[i+1]) or text[i+1] == '\0'){
-// 				word[iw] = '\0';
-// 				// string str[wCounter++] = word;
-// 				cout << word << endl;
-// 				iw = 0;
-// 			}
-//     }
-// }
-//     return 0;
-// }
-
-// for (проверка выборки , равны ли хеши.)
-// >> 2 массива строк.
-
-// AW 2;
-
-// по фрагмент
 double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int arrSizeOfText, int arrSizeOfFragment)
 {
-    MD5 md5;
     int i = 0;
     int j = 0;
     int counterOfCoincidence = 0;
@@ -75,10 +39,10 @@ double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int 
 
     for (i = 0; i < quantityOfFragmentSelections; i++)
     {
-        string hashOfFragment = md5.digestString(wordsOfFragment[i]) + md5.digestString(wordsOfFragment[i + 1]) + md5.digestString(wordsOfFragment[i + 2]);
-        for (j = 0; i < quantityOfTextSelections; j++)
+        string hashOfFragment = md5(wordsOfFragment[i] + wordsOfFragment[i + 1] + wordsOfFragment[i + 2]);
+        for (j = 0; j < quantityOfTextSelections; j++)
         {
-            string hashOfText = md5.digestString(wordsOfText[j]) + md5.digestString(wordsOfText[j + 1]) + md5.digestString(wordsOfText[j + 2]);
+            string hashOfText = md5(wordsOfText[j] + wordsOfText[j + 1] + wordsOfText[j + 2]);
             if (hashOfFragment == hashOfText)
                 counterOfCoincidence++;
         }
@@ -86,19 +50,7 @@ double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int 
     }
     return ((double)counterOfCoincidence / quantityOfFragmentSelections);
 }
-// int i = 0 ;
-// int j = 0;
-// int counterOfCoincidence = 0;
-// while (str[i+2] != '0')
-// str hash = md5.digetsString(str[i]) + md5.digetsString(str[i+1]) + md5.digetsString(str[i+2]);
-//{ по текст
-// while (str[j+2] != '0')
-// str hashCmp = md5.digetsString(strCmp[j]) + md5.digetsString(strCmp[j+1]) + md5.digetsString(strCmp[j+2]);
-//   }
-// j = 0 ;
-// if (hash == hashCmp){counterOfCoincidence++;}
-//}
-// return counterOfCoincidence;
+
 double antiPlagiarism(string text, string fragment)
 {
     int arrSizeOfText = calculateCountOfWords(text);
@@ -110,7 +62,7 @@ double antiPlagiarism(string text, string fragment)
     putWordsInArray(text, wordsOfText);
     putWordsInArray(fragment, wordsOfFragment);
 
-    return 0;
+    return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment);
 }
 int calculateCountOfWords(string str)
 {
@@ -127,7 +79,7 @@ int calculateCountOfWords(string str)
 
 bool isSeparator(char ch)
 {
-    char separator[] = {'/', '.', ',', ';', '!', '?', ':', ' '};
+    char separator[] = {'.', ',', ';', '!', '?', ':', ' ', '-', '+', '{', '}', '(', ')', '[', ']', '*', '@', '%', '$', '^', '&', '#', '`', '_', '=', '<', '>', '/', '|', '\'', '\\', '\"'};
     for (int i = 0; separator[i] != 0; i++)
     {
         if (ch == separator[i])

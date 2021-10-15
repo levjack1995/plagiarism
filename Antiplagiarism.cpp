@@ -4,6 +4,7 @@
 using namespace std;
 
 int calculateCountOfWords(string str);
+double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int arrSizeOfText, int arrSizeOfFragment);
 int strLen(char str[]);
 int strCmp(char destStr[], char srcStr[]);
 
@@ -62,7 +63,29 @@ int main()
 // AW 2;
 
 // по фрагмент
-// int countCoincidence(text, fragment);
+double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int arrSizeOfText, int arrSizeOfFragment)
+{
+    MD5 md5;
+    int i = 0;
+    int j = 0;
+    int counterOfCoincidence = 0;
+
+    int quantityOfTextSelections = arrSizeOfText - 2;
+    int quantityOfFragmentSelections = arrSizeOfFragment - 2;
+
+    for (i = 0; i < quantityOfFragmentSelections; i++)
+    {
+        string hashOfFragment = md5.digestString(wordsOfFragment[i]) + md5.digestString(wordsOfFragment[i + 1]) + md5.digestString(wordsOfFragment[i + 2]);
+        for (j = 0; i < quantityOfTextSelections; j++)
+        {
+            string hashOfText = md5.digestString(wordsOfText[j]) + md5.digestString(wordsOfText[j + 1]) + md5.digestString(wordsOfText[j + 2]);
+            if (hashOfFragment == hashOfText)
+                counterOfCoincidence++;
+        }
+        j = 0;
+    }
+    return ((double)counterOfCoincidence / quantityOfFragmentSelections);
+}
 // int i = 0 ;
 // int j = 0;
 // int counterOfCoincidence = 0;
@@ -81,11 +104,11 @@ double antiPlagiarism(string text, string fragment)
     int arrSizeOfText = calculateCountOfWords(text);
     int arrSizeOfFragment = calculateCountOfWords(fragment);
 
-    string str[arrSizeOfText];
-    string fragmentStr[arrSizeOfFragment];
+    string wordsOfText[arrSizeOfText];
+    string wordsOfFragment[arrSizeOfFragment];
 
-    putWordsInArray(text, str);
-    putWordsInArray(fragment, fragmentStr);
+    putWordsInArray(text, wordsOfText);
+    putWordsInArray(fragment, wordsOfFragment);
 
     return 0;
 }

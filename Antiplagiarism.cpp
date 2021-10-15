@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <cmath>
 
 /* system implementation headers */
 #include <cstdio>
@@ -122,7 +123,8 @@ double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int 
         }
         j = 0;
     }
-    return ((double)counterOfCoincidence / quantityOfFragmentSelections);
+    double coincidenceRatio = ((double)counterOfCoincidence / quantityOfFragmentSelections);
+    return round(coincidenceRatio * 10000) / 100;
 }
 
 double antiPlagiarism(string text, string fragment)
@@ -136,7 +138,7 @@ double antiPlagiarism(string text, string fragment)
     putWordsInArray(text, wordsOfText);
     putWordsInArray(fragment, wordsOfFragment);
 
-    return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment) * 100.0;
+    return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment);
 }
 int calculateCountOfMeanWords(string str)
 {

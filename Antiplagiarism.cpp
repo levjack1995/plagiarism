@@ -94,8 +94,8 @@ string const WORD_CONJUNCTIONS[QUANTITY_OF_CONJUNCTIONS] = {"and", "as", "or", "
 
 int main()
 {
-    string str = "black year and, man wolf";
-    string strCmp = "Black Year as, man wolf2";
+    string str = "black year and, man z wolf";
+    string strCmp = "Black Year as, man woman z wo lf2";
 
     cout << antiPlagiarism(strCmp, str);
 
@@ -136,7 +136,7 @@ double antiPlagiarism(string text, string fragment)
     putWordsInArray(text, wordsOfText);
     putWordsInArray(fragment, wordsOfFragment);
 
-    return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment);
+    return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment) * 100.0;
 }
 int calculateCountOfMeanWords(string str)
 {

@@ -3,25 +3,27 @@
 
 using namespace std;
 
-int calculateCountOfWords(string str);
+int calculateCountOfMeanWords(string str);
 double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int arrSizeOfText, int arrSizeOfFragment);
 int strLen(char str[]);
 int strCmp(char destStr[], char srcStr[]);
 
 bool isSeparator(char ch);
+bool isConjuction(string word);
 
 double antiPlagiarism(string text, string fragment);
 
 void putWordsInArray(string text, string strArray[]);
 
 int const N = 128;
+int const QUANTITY_OF_CONJUNCTIONS = 15;
 
-string const WORD_CONJUNCTIONS[] = {"and", "as", "or", "then", "but", "if", "till", "how", "so", "because", "unless", "until", "although", "however", "whenever"};
+string const WORD_CONJUNCTIONS[QUANTITY_OF_CONJUNCTIONS] = {"and", "as", "or", "then", "but", "if", "till", "how", "so", "because", "unless", "until", "although", "however", "whenever"};
 
 int main()
 {
-    string str = "AW 2 3242 fdf, fdf";
-    string strCmp = "AW 2 3242 fdf,s fdf";
+    string str = "black year and, man wolf";
+    string strCmp = "black year as, man wolf2";
 
     cout << antiPlagiarism(strCmp, str);
 
@@ -53,8 +55,8 @@ double calculateCoincidence(string wordsOfText[], string wordsOfFragment[], int 
 
 double antiPlagiarism(string text, string fragment)
 {
-    int arrSizeOfText = calculateCountOfWords(text);
-    int arrSizeOfFragment = calculateCountOfWords(fragment);
+    int arrSizeOfText = calculateCountOfMeanWords(text);
+    int arrSizeOfFragment = calculateCountOfMeanWords(fragment);
 
     string wordsOfText[arrSizeOfText];
     string wordsOfFragment[arrSizeOfFragment];
@@ -64,17 +66,30 @@ double antiPlagiarism(string text, string fragment)
 
     return calculateCoincidence(wordsOfText, wordsOfFragment, arrSizeOfText, arrSizeOfFragment);
 }
-int calculateCountOfWords(string str)
+int calculateCountOfMeanWords(string str)
 {
+    char word[N];
     int i = 0;
-    int counter = 0;
+    int iw = 0;
+    int wCounter = 0;
+
     for (i = 0; str[i] != '\0'; i++)
     {
         if (!isSeparator(str[i]))
-            if (isSeparator(str[i + 1]) or str[i + 1] == '\0')
-                counter++;
+        {
+            word[iw] = str[i];
+            iw++;
+            if (isSeparator(str[i + 1]) || str[i + 1] == '\0')
+            {
+                word[iw] = '\0';
+                if (!isConjuction(word))
+                    wCounter++;
+                //cout << word << endl;
+                iw = 0;
+            }
+        }
     }
-    return counter;
+    return wCounter;
 }
 
 bool isSeparator(char ch)
@@ -104,11 +119,12 @@ void putWordsInArray(string text, string strArray[])
         {
             word[iw] = text[i];
             iw++;
-            if (isSeparator(text[i + 1]) or text[i + 1] == '\0')
+            if (isSeparator(text[i + 1]) || text[i + 1] == '\0')
             {
                 word[iw] = '\0';
-                strArray[wCounter++] = word;
-                cout << word << endl;
+                if (!isConjuction(word))
+                    strArray[wCounter++] = word;
+                //cout << word << endl;
                 iw = 0;
             }
         }
@@ -147,4 +163,14 @@ int strCmp(char destStr[], char srcStr[])
     }
 
     return flag;
+}
+
+bool isConjuction(string word)
+{
+    for (int i = 0; i < QUANTITY_OF_CONJUNCTIONS; i++)
+    {
+        if (word == WORD_CONJUNCTIONS[i])
+            return true;
+    }
+    return false;
 }
